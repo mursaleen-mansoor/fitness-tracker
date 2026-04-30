@@ -61,24 +61,32 @@ io.on('connection', (socket) => {
     });
 });
 
-// Mount Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/workouts', workoutRoutes);
-app.use('/api/nutrition', nutritionRoutes);
-app.use('/api/progress', progressRoutes);
-app.use('/api/goals', goalRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/tickets', ticketRoutes);
-app.use('/api/agent', agentRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/gamification', gamificationRoutes);
-app.use('/api/strike-teams', strikeTeamRoutes);
-app.use('/api/biometrics', biometricRoutes);
-app.use('/api/transformations', transformationRoutes);
-app.use('/api/armory', armoryRoutes);
-app.use('/api/exercises', exerciseRoutes);
+// Route Mounting Logic
+const mountRoutes = (router) => {
+    router.use('/auth', authRoutes);
+    router.use('/admin', adminRoutes);
+    router.use('/dashboard', dashboardRoutes);
+    router.use('/workouts', workoutRoutes);
+    router.use('/nutrition', nutritionRoutes);
+    router.use('/progress', progressRoutes);
+    router.use('/goals', goalRoutes);
+    router.use('/notifications', notificationRoutes);
+    router.use('/tickets', ticketRoutes);
+    router.use('/agent', agentRoutes);
+    router.use('/contact', contactRoutes);
+    router.use('/gamification', gamificationRoutes);
+    router.use('/strike-teams', strikeTeamRoutes);
+    router.use('/biometrics', biometricRoutes);
+    router.use('/transformations', transformationRoutes);
+    router.use('/armory', armoryRoutes);
+    router.use('/exercises', exerciseRoutes);
+};
+
+// Mount on both /api (for local) and / (for Vercel prefix stripping)
+const apiRouter = express.Router();
+mountRoutes(apiRouter);
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // Error Middleware uploads folder static
 import { fileURLToPath } from 'url';
